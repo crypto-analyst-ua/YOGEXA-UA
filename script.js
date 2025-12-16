@@ -1483,7 +1483,7 @@ function loadProducts() {
               renderCategories();
               renderCategoriesList();
               renderBrands();
-              showNotification("Товари завантажено з локального файлу");
+              showNotification("");
               
               localStorage.setItem('products_backup', JSON.stringify(products));
             });
