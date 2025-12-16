@@ -1,11 +1,11 @@
 // Конфігурація Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDW7Jy2Ij1KPILAu24ZelhUCtviajfRP6g",
-  authDomain: "playjoy-ua.firebaseapp.com",
-  projectId: "playjoy-ua",
-  storageBucket: "playjoy-ua.firebasestorage.app",
-  messagingSenderId: "551110290374",
-  appId: "1:551110290374:web:3d8626477999542a24a0c7"
+  apiKey: "AIzaSyAdCLvAFPvs5zPIesXxzJZSo1GX80e6XJs",
+  authDomain: "yogexa-ua.firebaseapp.com",
+  projectId: "yogexa-ua",
+  storageBucket: "yogexa-ua.firebasestorage.app",
+  messagingSenderId: "435265542330",
+  appId: "1:435265542330:web:8a1a469876d5a1b9024a83"
 };
 
 // Константи для EmailJS
