@@ -1267,6 +1267,53 @@ function preprocessProducts(productsArray) {
   return processedProducts;
 }
 
+// ===== ФУНКЦИЯ ДЛЯ ВХОДА ЧЕРЕЗ GOOGLE =====
+function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    
+    // Добавляем дополнительные scopes при необходимости
+    provider.addScope('profile');
+    provider.addScope('email');
+    
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            // Успешный вход
+            const user = result.user;
+            
+            // Проверяем, новый ли это пользователь
+            const isNewUser = result.additionalUserInfo?.isNewUser || false;
+            
+            if (isNewUser) {
+                showNotification("Реєстрація через Google успішна!");
+            } else {
+                showNotification("Вхід через Google успішний!");
+            }
+            
+            closeModal();
+            
+            // Проверяем права администратора после входа
+            checkAdminStatus(user.uid);
+        })
+        .catch((error) => {
+            console.error("Помилка входу через Google: ", error);
+            
+            let errorMessage = "Помилка входу через Google";
+            switch (error.code) {
+                case 'auth/popup-closed-by-user':
+                    errorMessage = "Вікно авторизації закрито користувачем";
+                    break;
+                case 'auth/cancelled-popup-request':
+                    errorMessage = "Запит авторизації скасовано";
+                    break;
+                case 'auth/popup-blocked':
+                    errorMessage = "Вспливаюче вікно заблоковано браузером. Дозвольте спливаючі вікна для цього сайту";
+                    break;
+            }
+            
+            showNotification(errorMessage, "error");
+        });
+}
+
 function initApp() {
   emailjs.init(EMAILJS_USER_ID);
   
@@ -2955,6 +3002,7 @@ function closeModal() {
   }
 }
 
+// ===== ОБНОВЛЕННАЯ ФУНКЦИЯ АВТОРИЗАЦИИ С GOOGLE =====
 function openAuthModal() {
   const modalContent = document.getElementById("modal-content");
   modalContent.innerHTML = `
@@ -2965,6 +3013,16 @@ function openAuthModal() {
       <div class="auth-tab" onclick="switchAuthTab('register')">Реєстрація</div>
       <div class="auth-tab" onclick="switchAuthTab('admin')">Адміністратор</div>
     </div>
+    
+    <div class="social-auth">
+      <button class="btn btn-google" onclick="signInWithGoogle()">
+        <i class="fab fa-google"></i> Увійти через Google
+      </button>
+      <div class="auth-divider">
+        <span>або</span>
+      </div>
+    </div>
+    
     <form id="login-form" onsubmit="login(event)">
       <div class="form-group">
         <label>Email</label>
@@ -2976,6 +3034,7 @@ function openAuthModal() {
       </div>
       <button type="submit" class="btn btn-detail">Увійти</button>
     </form>
+    
     <form id="register-form" style="display:none;" onsubmit="register(event)">
       <div class="form-group">
         <label>Ім'я</label>
@@ -2991,6 +3050,7 @@ function openAuthModal() {
       </div>
       <button type="submit" class="btn btn-detail">Зареєструватися</button>
     </form>
+    
     <div id="admin-auth-form" style="display:none;">
       <p>Для доступу до панелі адміністратора введіть пароль:</p>
       <div class="form-group">
@@ -3002,7 +3062,6 @@ function openAuthModal() {
   `;
   
   openModal();
-  
   setTimeout(optimizeModalForMobile, 100);
 }
 
@@ -3011,6 +3070,7 @@ function switchAuthTab(tab) {
   const registerForm = document.getElementById("register-form");
   const adminForm = document.getElementById("admin-auth-form");
   const tabs = document.querySelectorAll(".auth-tab");
+  const socialAuth = document.querySelector(".social-auth");
   
   tabs.forEach(tab => tab.classList.remove('active'));
   
@@ -3018,16 +3078,19 @@ function switchAuthTab(tab) {
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
     adminForm.style.display = 'none';
+    socialAuth.style.display = 'block';
     tabs[0].classList.add('active');
   } else if (tab === 'register') {
     loginForm.style.display = 'none';
     registerForm.style.display = 'block';
     adminForm.style.display = 'none';
+    socialAuth.style.display = 'block';
     tabs[1].classList.add('active');
   } else if (tab === 'admin') {
     loginForm.style.display = 'none';
     registerForm.style.display = 'none';
     adminForm.style.display = 'block';
+    socialAuth.style.display = 'none';
     tabs[2].classList.add('active');
   }
 }
@@ -4180,7 +4243,7 @@ function viewOrders() {
                         <div class="order-summary">
                             <p><strong>Сума:</strong> ${formatPrice(order.total)} ₴</p>
                             <p><strong>Доставка:</strong> ${order.delivery.service}</p>
-                            <p><strong>Оплата:</strong> ${order.paymentMethod === 'cash' ? 'Готівкою при отриманні' : 'Онлайн  -оплата карткою'}</p>
+                            <p><strong>Оплата:</strong> ${order.paymentMethod === 'cash' ? 'Готівкою при отриманні' : 'Онлайн-оплата карткою'}</p>
                         </div>
                         
                         ${commentSection}
@@ -4434,4 +4497,4 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && rulesModal.classList.contains('active')) {
         closeRulesModal();
     }
-}); 
+});
