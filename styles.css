@@ -4511,3 +4511,8 @@ main {
 .user-menu:hover .user-dropdown {
     display: block;
 }
+
+/* Скрыть вкладку "Администратор" в модальном окне авторизации */
+.auth-tabs .auth-tab:nth-child(3) {
+    display: none !important;
+}
