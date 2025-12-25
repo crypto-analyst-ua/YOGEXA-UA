@@ -82,6 +82,77 @@
     .contact-info .fa-facebook { color: #1877F2; }
     .contact-info .fa-instagram { color: #E4405F; }
     .contact-info .fa-phone-alt { color: #2ecc71; }
+
+    /* Стили для красивых кнопок вкладок */
+    .source-tabs {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .source-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 20px;
+        background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        border: 2px solid #4CAF50;
+        border-radius: 10px;
+        color: #2E8B57;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .source-tab i {
+        font-size: 18px;
+        color: #2E8B57;
+    }
+
+    .source-tab.active {
+        background: linear-gradient(145deg, #4CAF50, #2E8B57);
+        color: white;
+        border-color: #2E8B57;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .source-tab.active i {
+        color: white;
+    }
+
+    .source-tab:hover:not(.active) {
+        background: linear-gradient(145deg, #e9ecef, #dee2e6);
+        transform: translateY(-1px);
+        box-shadow: 0 5px 8px rgba(0,0,0,0.15);
+    }
+
+    .tab-text {
+        white-space: nowrap;
+    }
+
+    /* Адаптивность для мобильных */
+    @media (max-width: 768px) {
+        .source-tabs {
+            flex-direction: column;
+        }
+        
+        .source-tab {
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        .source-tab i {
+            font-size: 16px;
+        }
+        
+        .tab-text {
+            font-size: 14px;
+        }
+    }
 </style>
 
     <!-- Объединенная JSON-LD Schema -->
@@ -334,9 +405,17 @@
         <section role="main">
             <div class="products-header">
                 <h1 id="products-title">Каталог спортивних товарів та екіпірування — купити в Україні з доставкою</h1>
+                
+                <!-- Обновленные красивые кнопки с иконками -->
                 <div class="source-tabs" role="tablist">
-                    <button class="source-tab active" role="tab" onclick="switchSource('all')" aria-selected="true">Всі товари</button>
-                    <button class="source-tab" role="tab" onclick="switchSource('sports1.json')" aria-selected="false">Товари для фітнесу та йоги</button>
+                    <button class="source-tab active" role="tab" onclick="switchSource('all')" aria-selected="true">
+                        <i class="fas fa-store" aria-hidden="true"></i>
+                        <span class="tab-text">Всі товари</span>
+                    </button>
+                    <button class="source-tab" role="tab" onclick="switchSource('sports1.json')" aria-selected="false">
+                        <i class="fas fa-dumbbell" aria-hidden="true"></i>
+                        <span class="tab-text">Товари для фітнесу та йоги</span>
+                    </button>
                 </div>
                 
                 <div class="products-info">
