@@ -242,7 +242,7 @@ function renderCatalogAds() {
   
   if (currentFilters.category) {
     adType = AD_CONFIG.AD_TYPES.RELATED;
-    adTitle = `Схожі товари у категорії "${currentFilters.category}"`;
+    adTitle = `Можливо, вас зацікавить"${currentFilters.category}"`;
   } else if (currentFilters.search) {
     adType = AD_CONFIG.AD_TYPES.POPULAR;
     adTitle = `Рекомендуємо подивитися`;
@@ -316,7 +316,7 @@ function renderProductAd(productId) {
   
   renderAdBlock(
     AD_CONFIG.AD_TYPES.RELATED,
-    `Схожі товари в категорії "${product.category}"`,
+    `Можливо, вас зацікавить "${product.category}"`,
     'product-ad-related',
     productId
   );
