@@ -71,6 +71,19 @@ const SEARCH_CONFIG = {
   MIN_QUERY_LENGTH: 2
 };
 
+// ===== РЕКЛАМНЫЕ БАННЕРЫ =====
+const AD_BANNERS = [
+  {
+    id: 1,
+    type: 'text',
+    title: '🔒 Безпечна покупка та швидка доставка',
+    text: '🛡️ Ви нічим не ризикуєте: спочатку отримуєте та перевіряєте товар — і лише потім оплачуєте. 🏭 Прямі поставки від виробників та офіційних постачальників. 🚚 Доставка Новою Поштою по всій Україні. 💰 Чесні ціни без завищень. 📄 Повернення протягом 14 днів без зайвих питань — ви захищені законом.',
+    backgroundColor: 'linear-gradient(135deg, #34D399, #22D3EE)',
+    textColor: '#FFFFFF'
+  }
+];
+// ===== КОНЕЦ РЕКЛАМНЫХ БАННЕРОВ =====
+
 // ===== СИСТЕМА РЕКЛАМНЫХ БЛОКОВ =====
 const AD_CONFIG = {
   MAX_AD_PRODUCTS: 8,
@@ -97,7 +110,7 @@ const searchSynonyms = {
 };
 
 const searchTypos = {
-  'кроссовки': ['кроссовки', 'кроссовок', 'кроссовками', 'кроссовках'],
+  'кроссовки': ['кроссовки', 'кроссовок', 'кросовками', 'кроссовках'],
   'тренажер': ['тренажер', 'тренажёр', 'тренажера', 'тренажеров'],
   'гантели': ['гантели', 'гантелей', 'гантелям', 'гантелями'],
   'велосипед': ['велосипед', 'велосипеда', 'велосипедам', 'велосипедах'],
@@ -135,6 +148,34 @@ let currentFilters = {
 };
 
 let currentRating = 0;
+
+// ===== ФУНКЦИИ ДЛЯ РЕКЛАМНЫХ БАННЕРОВ =====
+function renderSecurityBanner() {
+  const securityContainer = document.getElementById('security-banner-container');
+  if (!securityContainer) return;
+  
+  const banner = AD_BANNERS[0];
+  
+  securityContainer.innerHTML = `
+    <div class="security-banner" style="
+      background: ${banner.backgroundColor};
+      color: ${banner.textColor};
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    ">
+      <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px;">
+        ${banner.title}
+      </h3>
+      <div style="font-size: 0.95rem; line-height: 1.5; display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+        ${banner.text}
+      </div>
+    </div>
+  `;
+  
+  securityContainer.style.display = 'block';
+}
 
 // ===== РЕКЛАМНЫЕ ФУНКЦИИ =====
 function getAdProducts(type = AD_CONFIG.AD_TYPES.POPULAR, count = 4, excludeId = null) {
@@ -356,6 +397,34 @@ function initAds() {
   
   const adStyles = document.createElement('style');
   adStyles.textContent = `
+    /* Стили для баннера безопасности */
+    .security-banner {
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .security-banner h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .security-banner .icon {
+      font-size: 1.2em;
+      margin-right: 5px;
+    }
+    
+    /* Стили для рекламных блоков */
     .ad-block {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 12px;
@@ -502,6 +571,15 @@ function initAds() {
     }
     
     @media (max-width: 768px) {
+      .security-banner {
+        padding: 15px;
+        margin: 15px 0;
+      }
+      
+      .security-banner h3 {
+        font-size: 1.2rem;
+      }
+      
       .ad-products {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 10px;
@@ -1993,6 +2071,7 @@ function initApp() {
       checkFilesAvailability();
       renderHomePageAds(); // Показать рекламу на главной
       renderMainAdBanner(); // Показать главный баннер
+      renderSecurityBanner(); // Показать баннер безопасности
   });
   
   const cartData = localStorage.getItem(CART_STORAGE_KEY);
