@@ -153,6 +153,31 @@
             font-size: 14px;
         }
     }
+    
+    /* Стили для рекламного баннера */
+    .ad-banner-container {
+        width: 100%;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    .full-width-banner {
+        width: 100%;
+        height: auto;
+        display: block;
+        max-width: 100%;
+        object-fit: contain;
+    }
+
+    /* Для мобильных устройств */
+    @media (max-width: 768px) {
+        .full-width-banner {
+            min-height: 150px;
+            object-fit: cover;
+        }
+    }
 </style>
 
     <!-- Объединенная JSON-LD Schema -->
@@ -315,6 +340,13 @@
             <div class="search-suggestions" id="search-suggestions-mobile"></div>
         </div>
     </header>
+
+    <!-- Рекламный баннер -->
+    <div class="ad-banner-container">
+        <img src="file_00000000d0c472469936389705c8cf86.png" 
+             alt="Безпечна покупка та швидка доставка спортивних товарів по Україні"
+             class="full-width-banner">
+    </div>
 
     <!-- Контейнер для баннера безопасности -->
     <div id="security-banner-container" style="display: none;"></div>
