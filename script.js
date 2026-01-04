@@ -13,6 +13,10 @@ const EMAILJS_SERVICE_ID = "boltmaster-2025";
 const EMAILJS_TEMPLATE_ID = "template_2csi2fp";
 const EMAILJS_USER_ID = "hYmYimcQ5x5Mu_skB";
 
+// Константа для WhatsApp
+const WHATSAPP_PHONE = "380684296978"; // Замініть на реальний номер
+const WHATSAPP_MESSAGE_PREFIX = "Доброго дня! Хочу зробити швидке замовлення:\n\n";
+
 // Массив файлів з товарами
 const PRODUCT_FILES = [
     'sports1.json',
@@ -135,6 +139,102 @@ let currentFilters = {
 };
 
 let currentRating = 0;
+
+// ===== ФУНКЦИИ ДЛЯ WHATSAPP ЗАКАЗА =====
+function formatWhatsAppOrder() {
+  if (Object.keys(cart).length === 0) {
+    return "";
+  }
+  
+  let message = WHATSAPP_MESSAGE_PREFIX;
+  let total = 0;
+  
+  for (const [productId, quantity] of Object.entries(cart)) {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      const itemTotal = product.price * quantity;
+      total += itemTotal;
+      message += `• ${product.title} - ${quantity} шт. x ${formatPrice(product.price)} ₴ = ${formatPrice(itemTotal)} ₴\n`;
+    }
+  }
+  
+  message += `\n💰 *Загальна сума: ${formatPrice(total)} ₴*\n`;
+  
+  if (currentUser) {
+    message += `\n👤 *Клієнт:* ${currentUser.displayName || currentUser.email}\n`;
+  }
+  
+  message += `\n📞 *Телефон для зв'язку:* (вкажіть ваш номер)\n`;
+  message += `📍 *Адреса доставки:* (вкажіть вашу адресу)\n\n`;
+  message += `_Дякую! Очікую на підтвердження замовлення._`;
+  
+  return encodeURIComponent(message);
+}
+
+function openWhatsAppOrder() {
+  if (Object.keys(cart).length === 0) {
+    showNotification("Кошик порожній. Додайте товари для замовлення", "warning");
+    return;
+  }
+  
+  const message = formatWhatsAppOrder();
+  const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
+  
+  window.open(whatsappUrl, '_blank');
+  showNotification("Відкривається WhatsApp для оформлення замовлення", "info");
+}
+
+function initWhatsAppButtonStyles() {
+  const style = document.createElement('style');
+  style.textContent = `
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .btn-whatsapp:hover {
+      background: #1DA851;
+      color: white;
+    }
+    
+    .cart-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    @media (min-width: 768px) {
+      .cart-buttons {
+        flex-direction: row;
+      }
+      
+      .btn-whatsapp, .btn-buy {
+        flex: 1;
+      }
+    }
+    
+    .cart-footer .cart-total {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 // ===== ФУНКЦИИ ДЛЯ РЕКЛАМНЫХ БАННЕРОВ =====
 function renderSecurityBanner() {
@@ -2008,7 +2108,8 @@ function initApp() {
   emailjs.init(EMAILJS_USER_ID);
   
   initEnhancedSearch();
-  initAds(); // Инициализация рекламы
+  initAds();
+  initWhatsAppButtonStyles();
 
   showEnhancedLoadingSkeleton();
   
@@ -2056,9 +2157,9 @@ function initApp() {
       });
   }).finally(() => {
       checkFilesAvailability();
-      renderHomePageAds(); // Показать рекламу на главной
-      renderMainAdBanner(); // Показать главный баннер
-      renderSecurityBanner(); // Показать баннер безопасности
+      renderHomePageAds();
+      renderMainAdBanner();
+      renderSecurityBanner();
   });
   
   const cartData = localStorage.getItem(CART_STORAGE_KEY);
@@ -3002,7 +3103,7 @@ function showNotification(message, type = "success") {
 }
 
 function addToCart(productId) {
-  trackUserBehavior('add_to_cart', productId); // Отслеживание поведения
+  trackUserBehavior('add_to_cart', productId);
   
   if (!cart[productId]) {
     cart[productId] = 0;
@@ -3149,7 +3250,7 @@ function setViewMode(mode) {
 }
 
 function showProductDetail(productId) {
-  trackUserBehavior('view', productId); // Отслеживание просмотра
+  trackUserBehavior('view', productId);
   
   const product = products.find(p => p.id === productId);
   if (!product) return;
@@ -3219,7 +3320,7 @@ function showProductDetail(productId) {
   `;
   
   loadReviews(product.id);
-  renderProductAd(productId); // Показать рекламу
+  renderProductAd(productId);
   
   currentRating = 0;
   updateRatingStars();
@@ -3400,12 +3501,19 @@ function openCart() {
       </div>
       <div class="cart-footer">
         <div class="cart-total">Разом: ${formatPrice(total)} ₴</div>
-        <button class="btn btn-buy" onclick="checkout()">Оформити замовлення</button>
+        <div class="cart-buttons">
+          <button class="btn btn-buy" onclick="checkout()">
+            <i class="fas fa-credit-card"></i> Оформити замовлення
+          </button>
+          <button class="btn btn-whatsapp" onclick="openWhatsAppOrder()">
+            <i class="fab fa-whatsapp"></i> Швидке замовлення
+          </button>
+        </div>
       </div>
       <div id="cart-ad-related" style="display: none; margin-top: 20px;"></div>
     `;
     
-    renderCartAd(); // Показать рекламу в корзине
+    renderCartAd();
   }
   
   openModal();
@@ -3600,7 +3708,6 @@ function placeOrder(event) {
   
   db.collection("orders").add(order)
     .then((docRef) => {
-      // Отслеживание покупки
       Object.keys(cart).forEach(productId => {
         trackUserBehavior('purchase', productId);
       });
