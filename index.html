@@ -154,30 +154,7 @@
         }
     }
     
-    /* Стили для рекламного баннера */
-    .ad-banner-container {
-        width: 100%;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        background: white;
-    }
-
-    .full-width-banner {
-        width: 100%;
-        height: auto;
-        display: block;
-        max-width: 100%;
-        object-fit: contain;
-    }
-
-    /* Для мобильных устройств */
-    @media (max-width: 768px) {
-        .full-width-banner {
-            min-height: 150px;
-            object-fit: cover;
-        }
-    }
+    /* Удалены стили для рекламного баннера */
     
     /* Стили для плавающей кнопки WhatsApp */
     .whatsapp-float {
@@ -388,6 +365,74 @@
             left: 20px;
         }
     }
+
+    /* Стили для кнопки "Вернуться наверх" */
+    .back-to-top {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: #2E8B57;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(46, 139, 87, 0.4);
+        z-index: 999;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        opacity: 0;
+        visibility: hidden;
+        cursor: pointer;
+    }
+
+    .back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background-color: #4CAF50;
+        transform: scale(1.1);
+        box-shadow: 0 6px 18px rgba(46, 139, 87, 0.6);
+    }
+
+    .back-to-top:active {
+        transform: scale(0.95);
+    }
+
+    .back-to-top i {
+        color: white;
+        font-size: 24px;
+    }
+
+    /* Адаптация для мобильных устройств */
+    @media (max-width: 768px) {
+        .back-to-top {
+            width: 45px;
+            height: 45px;
+            bottom: 90px;
+            right: 20px;
+        }
+        
+        .back-to-top i {
+            font-size: 22px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .back-to-top {
+            width: 40px;
+            height: 40px;
+            bottom: 80px;
+            right: 15px;
+        }
+        
+        .back-to-top i {
+            font-size: 20px;
+        }
+    }
 </style>
 
     <!-- Объединенная JSON-LD Schema -->
@@ -551,12 +596,7 @@
         </div>
     </header>
 
-    <!-- Рекламный баннер -->
-    <div class="ad-banner-container">
-        <img src="file_00000000d0c472469936389705c8cf86.png" 
-             alt="Безпечна покупка та швидка доставка спортивних товарів по Україні"
-             class="full-width-banner">
-    </div>
+    <!-- Удален рекламный баннер -->
 
     <!-- Контейнер для баннера безопасности -->
     <div id="security-banner-container" style="display: none;"></div>
@@ -946,6 +986,11 @@
         </div>
     </footer>
 
+    <!-- Кнопка "Вернуться наверх" -->
+    <button class="back-to-top" id="backToTop" aria-label="Повернутися наверх" title="Повернутися наверх">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+
     <div id="modal" class="modal">
         <div class="modal-content" id="modal-content">
             <button class="modal-close" onclick="closeModal()" aria-label="Закрити"><i class="fas fa-times" aria-hidden="true"></i></button>
@@ -1082,5 +1127,28 @@
     <!-- Добавьте этот скрипт перед вашим script.js -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
     <script src="script.js"></script>
+    
+    <!-- Скрипт для кнопки "Вернуться наверх" -->
+    <script>
+        // Получаем кнопку
+        const backToTopButton = document.getElementById('backToTop');
+        
+        // Показываем кнопку при прокрутке страницы
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        // Плавная прокрутка вверх при клике
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>
