@@ -156,7 +156,7 @@
     
     /* Удалены стили для рекламного баннера */
     
-    /* Стили для плавающей кнопки WhatsApp */
+    /* Стили для плавающей кнопки WhatsApp (нижняя правая) */
     .whatsapp-float {
         position: fixed;
         bottom: 30px;
@@ -189,73 +189,11 @@
         font-size: 34px;
     }
 
-    /* Адаптация для мобильных устройств */
-    @media (max-width: 768px) {
-        .whatsapp-float {
-            width: 55px;
-            height: 55px;
-            bottom: 25px;
-            right: 25px;
-        }
-        
-        .whatsapp-float i {
-            font-size: 30px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .whatsapp-float {
-            width: 50px;
-            height: 50px;
-            bottom: 20px;
-            right: 20px;
-        }
-        
-        .whatsapp-float i {
-            font-size: 28px;
-        }
-    }
-
-    /* Дополнительная индикация для улучшения UX */
-    .whatsapp-float::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 2px solid transparent;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-        }
-        70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
-        }
-        100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-        }
-    }
-
-    /* Минимальный интервал для анимации на мобильных устройствах */
-    @media (max-width: 768px) {
-        .whatsapp-float::after {
-            animation: pulse 3s infinite;
-        }
-    }
-
-    /* Стили для плавающей кнопки Telegram */
+    /* Стили для плавающей кнопки Telegram (над WhatsApp) */
     .telegram-float {
         position: fixed;
-        bottom: 30px;
-        left: 30px;
+        bottom: 100px; /* Над WhatsApp */
+        right: 30px; /* Та же позиция по горизонтали */
         width: 60px;
         height: 60px;
         background-color: #0088cc;
@@ -312,13 +250,52 @@
         }
     }
 
+    /* Дополнительная индикация для улучшения UX (WhatsApp) */
+    .whatsapp-float::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+        }
+    }
+
     /* Адаптация для мобильных устройств */
     @media (max-width: 768px) {
-        .telegram-float {
+        .whatsapp-float {
             width: 55px;
             height: 55px;
             bottom: 25px;
-            left: 25px;
+            right: 25px;
+        }
+        
+        .whatsapp-float i {
+            font-size: 30px;
+        }
+        
+        .telegram-float {
+            width: 55px;
+            height: 55px;
+            bottom: 90px; /* Над WhatsApp на мобильных */
+            right: 25px;
         }
         
         .telegram-float i {
@@ -328,14 +305,29 @@
         .telegram-float::after {
             animation: pulse-telegram 3s infinite;
         }
+        
+        .whatsapp-float::after {
+            animation: pulse 3s infinite;
+        }
     }
 
     @media (max-width: 480px) {
-        .telegram-float {
+        .whatsapp-float {
             width: 50px;
             height: 50px;
             bottom: 20px;
-            left: 20px;
+            right: 20px;
+        }
+        
+        .whatsapp-float i {
+            font-size: 28px;
+        }
+        
+        .telegram-float {
+            width: 50px;
+            height: 50px;
+            bottom: 80px; /* Над WhatsApp на маленьких экранах */
+            right: 20px;
         }
         
         .telegram-float i {
@@ -343,34 +335,11 @@
         }
     }
 
-    /* Смещаем кнопку WhatsApp для мобильных, чтобы они не перекрывались */
-    @media (max-width: 768px) {
-        .whatsapp-float {
-            bottom: 25px;
-            right: 25px;
-        }
-        .telegram-float {
-            bottom: 25px;
-            left: 25px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .whatsapp-float {
-            bottom: 20px;
-            right: 20px;
-        }
-        .telegram-float {
-            bottom: 20px;
-            left: 20px;
-        }
-    }
-
-    /* Стили для кнопки "Вернуться наверх" */
+    /* Стили для кнопки "Вернуться наверх" - перемещена влево */
     .back-to-top {
         position: fixed;
         bottom: 100px;
-        right: 30px;
+        left: 30px; /* Левая сторона */
         width: 50px;
         height: 50px;
         background-color: #2E8B57;
@@ -413,7 +382,7 @@
             width: 45px;
             height: 45px;
             bottom: 90px;
-            right: 20px;
+            left: 20px;
         }
         
         .back-to-top i {
@@ -426,7 +395,7 @@
             width: 40px;
             height: 40px;
             bottom: 80px;
-            right: 15px;
+            left: 15px;
         }
         
         .back-to-top i {
@@ -690,18 +659,6 @@
         <section role="main">
             <div class="products-header">
                 <h1 id="products-title">Каталог спортивних товарів та екіпірування — купити в Україні з доставкою</h1>
-                
-                <!-- Обновленные красивые кнопки с иконками -->
-                <div class="source-tabs" role="tablist">
-                    <button class="source-tab active" role="tab" onclick="switchSource('all')" aria-selected="true">
-                        <i class="fas fa-store" aria-hidden="true"></i>
-                        <span class="tab-text">Всі товари</span>
-                    </button>
-                    <button class="source-tab" role="tab" onclick="switchSource('sports1.json')" aria-selected="false">
-                        <i class="fas fa-dumbbell" aria-hidden="true"></i>
-                        <span class="tab-text">Товари для фітнесу та йоги</span>
-                    </button>
-                </div>
                 
                 <div class="products-info">
                     <span id="products-count" aria-live="polite"></span>
@@ -1104,7 +1061,7 @@
         <span id="notification-text"></span>
     </div>
 
-    <!-- Плавающая кнопка WhatsApp -->
+    <!-- Плавающая кнопка WhatsApp (внизу справа) -->
     <a href="https://wa.me/380684296978" 
        class="whatsapp-float" 
        target="_blank" 
@@ -1114,7 +1071,7 @@
         <i class="fab fa-whatsapp" aria-hidden="true"></i>
     </a>
 
-    <!-- Плавающая кнопка Telegram -->
+    <!-- Плавающая кнопка Telegram (над WhatsApp, справа) -->
     <a href="https://t.me/Voanarhes" 
        class="telegram-float" 
        target="_blank" 
